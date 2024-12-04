@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "cross-env DEBUG=q-img:* nodemon",
+    "dev": "cross-env DEBUG=qimg:* nodemon",
     "deploy": "npm run migrate doc",
     "migrate": "prisma migrate deploy",
     "doc": "apidoc -i ./ -o ./doc",

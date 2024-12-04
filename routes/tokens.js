@@ -8,7 +8,7 @@ import { authenticate, requireAdmin } from "../lib/auth.js";
 import { asyncHandler, sendError } from "../lib/utils.js";
 
 const router = express.Router();
-const debug = createDebugger("q-img:tokens");
+const debug = createDebugger("qimg:tokens");
 
 /**
  * @api {get} /api/tokens/ Retrieve all tokens

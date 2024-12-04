@@ -10,7 +10,7 @@ import { upload } from "../lib/upload.js";
 import { asyncHandler, sendError } from "../lib/utils.js";
 
 const router = express.Router();
-const debug = createDebugger("q-img:images");
+const debug = createDebugger("qimg:images");
 
 /**
  * @api {get} /api/images/ Retrieve all images for a user

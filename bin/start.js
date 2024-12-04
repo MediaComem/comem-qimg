@@ -5,7 +5,7 @@ import http from "http";
 import app from "../app.js";
 import { port } from "../lib/config.js";
 
-const debug = createDebugger("q-img:server");
+const debug = createDebugger("qimg:server");
 
 app.set("port", port);
 

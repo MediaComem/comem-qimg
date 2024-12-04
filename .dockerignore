@@ -1,0 +1,13 @@
+# https://docs.docker.com/build/concepts/context/#dockerignore-files
+/.ackrc
+/.env
+/.github
+/.gitignore
+/apidoc.json
+/compose.yml
+/Dockerfile
+/.dockerignore
+/.editorconfig
+/node_modules
+/nodemon.json
+/.tool-versions

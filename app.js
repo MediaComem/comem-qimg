@@ -20,6 +20,8 @@ app.use('/doc', express.static("doc"));
 app.use("/api/images", imageRouter);
 app.use("/api/tokens", tokenRouter);
 
+app.get('/', (req, res) => res.redirect('/doc'));
+
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   next(createError(404));

@@ -143,9 +143,9 @@ router.post(
     }
 
     const image = await prisma.image.create({ data });
-    await purgeImages(req.authToken, res);
-
     debug(`Created image ${image.appID} (${prettyBytes(image.imageSize)} bytes)`);
+
+    await purgeImages(req.authToken, res);
 
     res.status(201).send(serializeImage(image, req));
   })

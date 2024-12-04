@@ -1,5 +1,7 @@
 # qimg
 
+Quick-and-dirty image upload API
+
 [![build](https://github.com/MediaComem/comem-qimg/actions/workflows/build.yml/badge.svg)](https://github.com/MediaComem/comem-qimg/actions/workflows/build.yml)
 [![publish](https://github.com/MediaComem/comem-qimg/actions/workflows/publish.yml/badge.svg)](https://github.com/MediaComem/comem-qimg/actions/workflows/publish.yml)
 

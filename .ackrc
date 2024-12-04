@@ -1,0 +1,3 @@
+# https://beyondgrep.com
+--ignore-dir=doc
+--ignore-dir=node_modules

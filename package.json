@@ -4,26 +4,28 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "DEBUG=app:* nodemon",
-    "deploy": "run-s migrate doc",
-    "migrate": "npx prisma migrate deploy",
+    "dev": "cross-env DEBUG=q-img:* nodemon",
+    "deploy": "npm run migrate doc",
+    "migrate": "prisma migrate deploy",
     "doc": "apidoc -i ./ -o ./doc",
     "start": "node ./bin/start"
   },
   "dependencies": {
-    "@prisma/client": "^4.8.0",
-    "apidoc": "^0.53.1",
+    "@prisma/client": "^4.16.2",
+    "apidoc": "^1.2.0",
     "cors": "^2.8.5",
-    "debug": "~4.3.4",
-    "express": "~4.18.1",
+    "debug": "^4.3.4",
+    "express": "^4.18.3",
     "http-errors": "^2.0.0",
-    "morgan": "~1.10.0",
+    "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
+    "pretty-bytes": "^6.1.1",
     "prisma": "^4.8.0",
-    "uuid": "^9.0.0"
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20",
-    "npm-run-all": "^4.1.5"
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.7",
+    "nodemon": "^3.1.7"
   }
 }

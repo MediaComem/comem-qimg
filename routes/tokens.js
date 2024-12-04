@@ -1,11 +1,14 @@
 import crypto from "crypto";
+import createDebugger from "debug";
 import express from "express";
 import { v4 as uuidv4 } from "uuid";
+
 import { prisma } from "../app.js";
 import { authenticate, requireAdmin } from "../lib/auth.js";
 import { asyncHandler, sendError } from "../lib/utils.js";
 
 const router = express.Router();
+const debug = createDebugger("q-img:tokens");
 
 /**
  * @api {get} /api/tokens/ Retrieve all tokens
@@ -38,7 +41,6 @@ const router = express.Router();
  * @apiError (401) Invalid Invalid Bearer token.
  * @apiError (403) Forbidden You must be an administrator to perform this action.
  */
-
 router.get(
   "/",
   authenticate,
@@ -56,7 +58,7 @@ router.get(
 );
 
 /**
- * @api {post} /api/tokens/ Create a new Token
+ * @api {post} /api/tokens/ Create a new token
  * @apiName CreateToken
  * @apiDescription Create a user authentication token. This token can be used to upload and list images as a user.
  * Tokens are only valid for a limited time. You can specify an optional lifetime property (in seconds) which defaults to 2,592,000 (30 days). It must be at least 1 second and at most 31,536,000 seconds (365 days).
@@ -96,10 +98,10 @@ router.post(
   requireAdmin,
   asyncHandler(async (req, res, next) => {
     const lifetime = req.body.lifetime || 60 * 60 * 24 * 30;
-    if (!Number.isInteger(lifetime) || lifetime <= 0 || !lifetime > 31536000) {
+    if (!Number.isInteger(lifetime) || lifetime < 86_400 || !lifetime > 31_536_000) {
       return sendError(
         422,
-        'The "lifetime" property must be an integer greater than 0 and smaller or equal to 31,536,000 (365 days).',
+        'The "lifetime" property must be an integer greater than or equal to 86,400 (1 day) and smaller or equal than 31,536,000 (365 days).',
         res
       );
     }
@@ -127,8 +129,9 @@ router.post(
       }
     });
 
-    res.status(201);
-    res.send(token);
+    debug(`Created token ${token.appID} with a lifetime of ${lifetime / 86_400} days`);
+
+    res.status(201).send(token);
   })
 );
 
@@ -145,7 +148,6 @@ router.post(
  * @apiError (401) Invalid Invalid Bearer token.
  * @apiError (403) Forbidden You must be an administrator to perform this action..
  */
-
 router.delete(
   "/:id",
   authenticate,
@@ -156,6 +158,9 @@ router.delete(
         appID: req.params.id
       }
     });
+
+    debug(`Deleted token ${token.appID}`);
+
     res.sendStatus(204);
   })
 );

@@ -1,13 +1,16 @@
+import createDebugger from "debug";
 import express from "express";
+import prettyBytes from "pretty-bytes";
 import { v4 as uuidv4 } from "uuid";
+
 import { prisma } from "../app.js";
 import { authenticate, requireUser } from "../lib/auth.js";
 import { config } from "../lib/config.js";
 import { upload } from "../lib/upload.js";
-import { asyncHandler } from "../lib/utils.js";
-import { sendError } from "../lib/utils.js";
+import { asyncHandler, sendError } from "../lib/utils.js";
 
 const router = express.Router();
+const debug = createDebugger("q-img:images");
 
 /**
  * @api {get} /api/images/ Retrieve all images for a user
@@ -36,7 +39,6 @@ const router = express.Router();
  * @apiError (401) Invalid Invalid Bearer token.
  * @apiError (403) Forbidden Administrators cannot perform this action.
  */
-
 router.get(
   "/",
   authenticate,
@@ -102,7 +104,6 @@ router.get(
  * @apiError (401) Invalid Invalid Bearer token.
  * @apiError (403) Forbidden Administrators cannot perform this action.
  */
-
 router.post(
   "/",
   authenticate,
@@ -143,6 +144,9 @@ router.post(
 
     const image = await prisma.image.create({ data });
     await purgeImages(req.authToken, res);
+
+    debug(`Created image ${image.appID} (${prettyBytes(image.imageSize)} bytes)`);
+
     res.status(201).send(serializeImage(image, req));
   })
 );
@@ -170,7 +174,6 @@ router.get(
  * @apiName Delete an uploaded image
  *
  * @apiGroup Images
- * 
  * @apiParam { String } imageID The image's's UUID
 
  * @apiHeader {String} Authorization The Authorization header must contain a user's bearer token.
@@ -179,9 +182,7 @@ router.get(
  * @apiError (401) Invalid Invalid Bearer token.
  * @apiError (403) Forbidden Administrators cannot perform this action.
  * @apiError (404) NotFound No image found with this id.
-
  */
-
 router.delete(
   "/:id",
   authenticate,
@@ -206,6 +207,7 @@ router.delete(
 
     const image = await prisma.image.deleteMany(options);
     if (image.count) {
+      debug(`Deleted image ${image.appID}`);
       res.sendStatus(204);
     } else {
       return sendError(404, "No image found with this id", res);
@@ -236,6 +238,8 @@ const purgeImages = async (authToken, res) => {
           }
         }
       });
+
+      debug(`Purged ${imagesToDelete.length} image(s) for ${authToken.appID}`);
     }
   } catch (err) {
     return sendError(409, "Could not purge images", res);
@@ -246,7 +250,7 @@ const serializeImage = (image, req) => {
   const serialized = {
     id: image.appID,
     size: image.imageSize,
-    url: `${config.appURL}/api/images/${image.appID}.png`,
+    url: `${config.baseUrl}/api/images/${image.appID}.png`,
     createdAt: image.createdAt.toISOString()
   };
 

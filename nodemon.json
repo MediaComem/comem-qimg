@@ -1,0 +1,14 @@
+{
+  "ignore": [
+    ".git",
+    "node_modules"
+  ],
+  "restartable": "rs",
+  "watch": [
+    "app.js",
+    "bin",
+    ".env",
+    "lib",
+    "routes"
+  ]
+}
